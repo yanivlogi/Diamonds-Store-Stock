@@ -48,3 +48,61 @@
   {
  color: #007bff;  
  text-shadow: 0px 5px 3px #110d0d44;}
+
+
+
+
+
+
+
+
+
+/* CSS */
+.add-post .checkbox-container {
+  display: table-header-group;
+  vertical-align: baseline;
+  cursor: pointer;
+  padding: 40px;
+  margin-right: 30px; /* Adjust the margin to move the checkboxes closer to the right */
+}
+
+.add-post .checkbox-input {
+  position: fixed;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.add-post .checkbox-checkmark {
+  position: relative;
+  display: inline-block;
+  margin-right: 10px;
+  width: 20px;
+  height: 20px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  background-color: #fff;
+}
+
+.add-post .checkbox-checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.add-post .checkbox-input:checked ~ .checkbox-checkmark:after {
+  display: block;
+}
+
+.add-post .checkbox-checkmark:after {
+  left: 7px;
+  top: 3px;
+  width: 5px;
+  height: 10px;
+  border: solid #000;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+
+
+

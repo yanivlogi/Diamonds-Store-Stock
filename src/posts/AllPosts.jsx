@@ -3,13 +3,9 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import { Card, Button, Col, Row, Form, Container, Tooltip, OverlayTrigger } from "react-bootstrap";
-import { cities } from "../js/cities.js";
-import { dogsList } from "../js/dogsList.js";
-import { catsList } from "../js/catsList.js";
-import { petsList } from "../js/petsList.js";
-import { birdsList } from "../js/birdsList.js";
-import { reptilesList } from "../js/reptilesList.js";
-import { rodentsList } from "../js/rodentsList.js";
+import { citiesList } from "../js/citiesList.js";
+import { stonsList } from "../js/stonsList.js";
+
 import "../css/PostList.css";
 import searchBackgroundImage from "../uploads/searchBackgroundImage.jpg"; 
 
@@ -120,23 +116,23 @@ const AllPosts = () => {
     setCategory(selectedCategory);
 
     if (selectedCategory === "כלבים") {
-      setTypeOptions(dogsList);
+      setTypeOptions(stonsList);
       setTypeLabel("בחר סוג כלב");
     }
     else if (selectedCategory === "חתולים") {
-      setTypeOptions(catsList);
+      setTypeOptions(stonsList);
       setTypeLabel("בחר סוג חתול");
     }
     else if (selectedCategory === "תוכים ובעלי כנף") {
-      setTypeOptions(birdsList);
+      setTypeOptions(stonsList);
       setTypeLabel("בחר סוג ציפורים");
     }
     else if (selectedCategory === "מכרסמים") {
-      setTypeOptions(rodentsList);
+      setTypeOptions(stonsList);
       setTypeLabel("בחר סוג מכרסמים");
     }
     else if (selectedCategory === "זוחלים") {
-      setTypeOptions(reptilesList);
+      setTypeOptions(stonsList);
       setTypeLabel("בחר סוג זוחלים");
     }
     else {
@@ -209,13 +205,13 @@ const AllPosts = () => {
               <Row>
                 <Col xs={12} md={3}>
                   <Form.Group controlId="category">
-                    <Form.Label>קטגוריה:</Form.Label>
+                    <Form.Label>סוג אבן:</Form.Label>
                     <Form.Select
                       value={category}
                       onChange={(e) => handleCategoryChange(e.target.value)}
                     >
                       <option value="">הכל</option>
-                      {petsList.map((pet) => (
+                      {stonsList.map((pet) => (
                         <option key={pet} value={pet}>
                           {pet}
                         </option>
@@ -257,7 +253,7 @@ const AllPosts = () => {
                       onChange={(e) => setSelectedLocation(e.target.value)}
                     >
                       <option value="">הכל</option>
-                      {cities.map((city) => (
+                      {citiesList.map((city) => (
                         <option key={city} value={city}>
                           {city}
                         </option>

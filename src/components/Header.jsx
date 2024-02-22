@@ -59,18 +59,18 @@ const Header = () => {
   };
 
   return (
-    <header>
-    <Navbar bg="primary" variant="dark" expand="lg" fixed="top">
+    <header style={{marginBottom:'80px'}}>
+    <Navbar variant="dark" expand="lg" fixed="top" style={{backgroundImage:"url(https://images.unsplash.com/photo-1533134486753-c833f0ed4866?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)" , backgroundSize:'cover', backgroundPosition:'center' ,textAlign:'center'}}>
       <Container>
         <Navbar.Brand className="d-flex align-items-center justify-content-center">
           <a href="/" className="d-flex align-items-center" style={{ textDecoration: 'none' }}>
             <img 
               src={logo}
               alt="Logo"
-              className="mr-2 rounded-circle"
-              style={{ width: '45px', marginLeft: 'auto', marginRight: 'auto',animation: 'slidein 3s linear 1s infinite alternate' }}
+              
+              style={{ height:'100px',position:'relative',backgroundColor:'white', borderStyle:'solid' ,borderColor:'#9e861c', borderRadius:'30%', marginRight:'10px' }}
             />
-            <span style={{ fontSize: '20px', fontWeight: 'bold' , color:'white'}}>PetHouse</span>
+            <span style={{ fontSize: '20px', fontWeight: 'bold' , color:'white'}}>Eliyahu Hanavi Stock</span>
           </a>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="navbar-nav" />
@@ -78,8 +78,8 @@ const Header = () => {
           <Nav className="me-auto mb-2 mb-lg-0">
               <Nav.Link href="/AboutUs">עלינו</Nav.Link>
               <Nav.Link href="/ContactUs">צור קשר</Nav.Link>
-              <Nav.Link href="/AdoptedPosts">חיות שאומצו</Nav.Link>
-              <Nav.Link href="/AllPosts">כל הפוסטים</Nav.Link>
+              <Nav.Link href="/AdoptedPosts">העלאת תכשיט חדש</Nav.Link>
+              <Nav.Link href="/AllPosts">כל התכשיטים</Nav.Link>
             </Nav>
             <Nav className="ms-auto mb-2 mb-lg-0">
               {!isLoggedIn ? (
@@ -116,6 +116,8 @@ const Header = () => {
           </Navbar.Collapse>
         </Container>
       </Navbar>
+        
+        
     </header>
   );
 };

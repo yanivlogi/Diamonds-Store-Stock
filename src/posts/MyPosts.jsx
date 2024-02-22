@@ -3,13 +3,9 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import { Card, Button, Col, Row, Form, Container } from "react-bootstrap";
-import { cities } from "../js/cities.js";
-import { dogsList } from "../js/dogsList.js";
-import { catsList } from "../js/catsList.js";
-import { petsList } from "../js/petsList.js";
-import { birdsList } from "../js/birdsList.js";
-import { reptilesList } from "../js/reptilesList.js";
-import { rodentsList } from "../js/rodentsList.js";
+import { citiesList } from "../js/citiesList.js";
+import { stonsList } from "../js/stonsList.js";
+
 import "../css/MyPosts.css";
 import searchBackgroundImage from "../uploads/searchBackgroundImage.jpg";
 
@@ -132,23 +128,23 @@ const MyPostList = () => {
     setCategory(selectedCategory);
 
     if (selectedCategory === "כלבים") {
-      setTypeOptions(dogsList);
+      setTypeOptions(stonsList);
       setTypeLabel("בחר סוג כלב");
     }
     else if (selectedCategory === "חתולים") {
-      setTypeOptions(catsList);
+      setTypeOptions(stonsList);
       setTypeLabel("בחר סוג חתול");
     }
     else if (selectedCategory === "תוכים ובעלי כנף") {
-      setTypeOptions(birdsList);
+      setTypeOptions(stonsList);
       setTypeLabel("בחר סוג ציפורים");
     }
     else if (selectedCategory === "מכרסמים") {
-      setTypeOptions(rodentsList);
+      setTypeOptions(stonsList);
       setTypeLabel("בחר סוג מכרסמים");
     }
     else if (selectedCategory === "זוחלים") {
-      setTypeOptions(reptilesList);
+      setTypeOptions(stonsList);
       setTypeLabel("בחר סוג זוחלים");
     }
     else {
@@ -229,9 +225,9 @@ const MyPostList = () => {
                           onChange={(e) => handleCategoryChange(e.target.value)}
                         >
                           <option value="">הכל</option>
-                          {petsList.map((pet) => (
-                            <option key={pet} value={pet}>
-                              {pet}
+                          {stonsList.map((stone) => (
+                            <option key={stone} value={stone}>
+                              {stone}
                             </option>
                           ))}
                         </Form.Select>
@@ -271,7 +267,7 @@ const MyPostList = () => {
                           onChange={(e) => setSelectedLocation(e.target.value)}
                         >
                           <option value="">הכל</option>
-                          {cities.map((city) => (
+                          {citiesList.map((city) => (
                             <option key={city} value={city}>
                               {city}
                             </option>

@@ -1,4 +1,4 @@
-export const cities = [
+export const citiesList = [
     "ירושלים",
     "תל אביב-יפו",
     "חיפה",

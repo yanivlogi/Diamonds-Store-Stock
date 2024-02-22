@@ -1,11 +1,14 @@
+
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate, useParams, Link } from "react-router-dom";
-import { citiesList } from "../js/citiesList.js";
+import { useNavigate, Link } from "react-router-dom";
+
 import { stonsList } from "../js/stonsList.js";
 
+import "../css/imageCss.css";
+import "../css/AddPost.css";
 
-const EditPost = () => {
+const AddPost = () => {
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const [gender, setGender] = useState("זכר");
@@ -17,59 +20,29 @@ const EditPost = () => {
   const [isEducated, setIsEducated] = useState("");
   const [isCastrated, setIsCastrated] = useState("");
   const [name, setName] = useState("");
-  const [removedImageIndices, setRemovedImageIndices] = useState([]);
-
-  const [currentImages, setCurrentImages] = useState([]);
-  const [updateImages, setUpdateImages] = useState([]);
+  const [images, setImages] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [birds, setBirds] = useState([]);
+  const [stons, stonsList] = useState([]);
   const [typeOptions, setTypeOptions] = useState([]);
   const [typeLabel, setTypeLabel] = useState("בחר קודם קטגוריה כדי לבחור סוג");
   const [isDragging, setIsDragging] = useState(false);
-  const [userId, setUserId] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-
   const [server_url] = useState(process.env.REACT_APP_SERVER_URL);
+
   const navigate = useNavigate();
-  const { id } = useParams();
 
   useEffect(() => {
-    getPostById();
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
   }, []);
 
-  const getPostById = async () => {
-    try {
-      const user_Id = localStorage.getItem("token");
-      const response = await axios.get(`${server_url}/posts/${id}`, { user_Id });
-      const postData = response.data;
-      setTitle(response.data.title);
-      setCategory(response.data.category);
-      setGender(response.data.gender);
-      setLocation(response.data.location);
-      setType(response.data.type);
-      setAge(response.data.age);
-      setDescription(response.data.description);
-      setName(response.data.name);
-      setUserId(user_Id);
-      setIsImmune(response.data.isImmune);
-      setIsEducated(response.data.isEducated);
-      setIsCastrated(response.data.isCastrated);
-
-      var imagePaths = response.data.image.split(",").map((path) => server_url + path.replace('uploads\\', "/"));
-      const currentImagesArray = imagePaths.map((path) => ({
-        file: null, // Set the file property to null for current images
-        path: path, // Set the path property for displaying the image
-        isNew: false, // Flag indicating it's a current image
-      }));
-      setCurrentImages(currentImagesArray); // Set the current images state
-      setIsLoggedIn(true);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const updatePost = async (e) => {
+  const AddPost = async (e) => {
     e.preventDefault();
+
+    const userId = localStorage.getItem("token");
 
     const formData = new FormData();
     formData.append("title", title);
@@ -84,51 +57,28 @@ const EditPost = () => {
     formData.append("isImmune", isImmune);
     formData.append("isEducated", isEducated);
     formData.append("isCastrated", isCastrated);
-    formData.append("removedImageIndices", JSON.stringify(removedImageIndices));
 
-
-    updateImages.forEach((image) => {
-      formData.append("image[]", image.file);
+    // Append each image file separately
+    images.forEach((image) => {
+      formData.append("image[]", image);
     });
 
-
-
     try {
-      const response = await axios.put(`${server_url}/posts/${id}`, formData);
-
-      if (response.status === 200) {
-
-        setErrorMessage("");
-        navigate("/");
-      } else if (response.status === 403) {
-        setErrorMessage(response.data.message);
-      }
+      await axios.post(`${server_url}/posts`, formData);
+      navigate("/");
     } catch (error) {
       console.log(error);
     }
   };
 
-  const removeCurrentImage = (index, e) => {
-    e.preventDefault(); // Prevent the default button click behavior
-    setCurrentImages((prevImages) => prevImages.filter((_, i) => i !== index));
-    setRemovedImageIndices((prevIndices) => [...prevIndices, index]);
-  };
-
-
   const removeImage = (index) => {
-    updateImages((prevImages) => prevImages.filter((_, i) => i !== index));
+    setImages((prevImages) => prevImages.filter((_, i) => i !== index));
   };
 
   const handleImageChange = (e) => {
-    const selectedImages = Array.from(e.target.files).map((file) => ({
-      file: file,
-      path: URL.createObjectURL(file),
-      isNew: true,
-    }));
-    setUpdateImages((prevImages) => [...prevImages, ...selectedImages]);
-
+    const selectedImages = Array.from(e.target.files);
+    setImages((prevImages) => [...prevImages, ...selectedImages]);
   };
-
 
   const handleUploadClick = () => {
     document.getElementById("imageInput").click();
@@ -137,7 +87,7 @@ const EditPost = () => {
   const handleDrop = (e) => {
     e.preventDefault();
     const droppedImages = Array.from(e.dataTransfer.files);
-    updateImages((prevImages) => [...prevImages, ...droppedImages]);
+    setImages((prevImages) => [...prevImages, ...droppedImages]);
     setIsDragging(false);
   };
 
@@ -161,7 +111,7 @@ const EditPost = () => {
       setTypeLabel("בחר סוג חתול");
     } else if (selectedCategory === "תוכים ובעלי כנף") {
       setTypeOptions(stonsList);
-      setTypeLabel("בחר סוג ציפורים");
+      setTypeLabel("בחר סוג אבן");
     } else if (selectedCategory === "מכרסמים") {
       setTypeOptions(stonsList);
       setTypeLabel("בחר סוג מכרסמים");
@@ -174,16 +124,15 @@ const EditPost = () => {
     }
   };
 
-
   return (
-    <div className="container mt-5">
+    <div className="container my-5">
       {isLoggedIn ? (
         <div className="row" id="add-post-row">
           <div className="col-md-6 mx-auto">
             <div className="card">
               <div className="card-body">
-                <h1 className="card-title text-center mb-4" >עריכת פוסט</h1>
-                <form onSubmit={updatePost}>
+                <h1 className="card-title text-center mb-4" >הוספת בעל חיים</h1>
+                <form onSubmit={AddPost}>
                   <div className="form-group" >
                     <label htmlFor="name">שם בעל החייים</label>
                     <input
@@ -196,6 +145,7 @@ const EditPost = () => {
                       required
                     />
                   </div>
+
                   <div className="form-group">
                     <label htmlFor="category">קטגוריה</label>
                     <select
@@ -205,7 +155,7 @@ const EditPost = () => {
                       onChange={(e) => handleCategoryChange(e.target.value)}
                       required
                     >
-                      <option value="">בחר קטגורית חיית מחמד</option>
+                      <option value="">בחר סוג אבן</option>
                       {stonsList.map((type) => (
                         <option key={type} value={type}>
                           {type}
@@ -213,6 +163,7 @@ const EditPost = () => {
                       ))}
                     </select>
                   </div>
+
                   <div className="form-group">
                     <label htmlFor="type">{typeLabel}</label>
 
@@ -223,7 +174,7 @@ const EditPost = () => {
                       onChange={(e) => setType(e.target.value)}
                       required
                     >
-                      <option value={type}>{type}</option>
+                      <option value="">Select type</option>
                       {typeOptions.map((type) => (
                         <option key={type} value={type}>
                           {type}
@@ -285,6 +236,7 @@ const EditPost = () => {
 
                     </select>
                   </div>
+
                   <div className="form-group">
                     <label htmlFor="location">איזור איסוף</label>
                     <select
@@ -295,11 +247,7 @@ const EditPost = () => {
                       required
                     >
                       <option value="">בחר מיקום</option>
-                      {citiesList.map((city) => (
-                        <option key={city} value={city}>
-                          {city}
-                        </option>
-                      ))}
+                     
                     </select>
                   </div>
 
@@ -327,6 +275,7 @@ const EditPost = () => {
                       required
                     />
                   </div>
+
                   <div className="form-group">
                     <label htmlFor="image">Image</label>
                     <small className="text-muted">
@@ -354,49 +303,22 @@ const EditPost = () => {
                         >
                           {isDragging
                             ? "Drop image here 🔽"
-                            : updateImages.length === 0
+                            : images.length === 0
                               ? "Choose file 🖼"
                               : "Upload more files ➕"}
                         </label>
                       </div>
                     </div>
-                    {currentImages.map((image, index) => {
-                      if (image.path !== `${server_url}/defaultImage.png`) {
-                        return (
-                          <div key={index} className="image-item position-relative">
-                            <img
-                              src={image.path}
-                              alt={`Current Image ${index + 1}`}
-                              className="preview-image img-thumbnail"
-                              style={{ width: "200px" }}
-                            />
-                            <button
-                              className="remove-button"
-                              onClick={(e) => removeCurrentImage(index, e)}
-                            >
-                              <span
-                                style={{
-                                  fontSize: "18px",
-                                  fontWeight: "bold",
-                                }}
-                              >
-                                ✖
-                              </span>
-                            </button>
-                          </div>
-                        );
-                      } else {
-                        return null; // Do not render defaultImage.png
-                      }
-                    })}
-
-                    {updateImages.length > 0 && (
+                    {images.length > 0 && (
                       <div className="image-preview">
-                        {updateImages.map((image, index) => (
-                          <div key={index} className="image-item position-relative">
+                        {images.map((image, index) => (
+                          <div
+                            key={index}
+                            className="image-item position-relative"
+                          >
                             <img
-                              src={image.path}
-                              alt={`New Image ${index + 1}`}
+                              src={URL.createObjectURL(image)}
+                              alt={`Image ${index + 1}`}
                               className="preview-image img-thumbnail"
                               style={{ width: "200px" }}
                             />
@@ -418,6 +340,7 @@ const EditPost = () => {
                       </div>
                     )}
                   </div>
+
                   <button
                     type="submit"
                     className="btn btn-primary mt-4"
@@ -440,4 +363,5 @@ const EditPost = () => {
     </div>
   );
 };
-export default EditPost;
+
+export default AddPost;
